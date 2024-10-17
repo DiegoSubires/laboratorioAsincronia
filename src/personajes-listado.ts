@@ -1,8 +1,5 @@
 import { CrearBotonParams, Personaje } from "./personajes-listado.model";
-import {
-  obtenerPersonajes,
-  obtenerPersonajes2,
-} from "./personajes-listado.api";
+import { obtenerPersonajes } from "./personajes-listado.api";
 
 export let imputForm: string = "morta";
 console.log(imputForm);
@@ -98,21 +95,8 @@ export const crearContenedorPersonaje = (
   return elementoPersonaje;
 };
 
-export const pintarPersonajes = async (): Promise<void> => {
-  const personajes = await obtenerPersonajes();
-  const listado = document.querySelector("#listado-personajes");
-  if (listado && listado instanceof HTMLDivElement) {
-    personajes.forEach((personaje) => {
-      const contenedorPersonaje = crearContenedorPersonaje(personaje);
-      listado.appendChild(contenedorPersonaje);
-    });
-  } else {
-    throw new Error("No se ha encontrado el contenedor del listado");
-  }
-};
-
-export const pintarPersonajes2 = async (str: string): Promise<void> => {
-  const personajes = await obtenerPersonajes2(str);
+export const pintarPersonajes = async (str: string): Promise<void> => {
+  const personajes = await obtenerPersonajes(str);
   const listado = document.querySelector("#listado-personajes");
   if (listado && listado instanceof HTMLDivElement) {
     personajes.forEach((personaje) => {
@@ -127,7 +111,7 @@ export const pintarPersonajes2 = async (str: string): Promise<void> => {
 document.addEventListener("DOMContentLoaded", () => {
   handleClickFiltrar;
 });
-pintarPersonajes2("");
+pintarPersonajes("");
 export const obtenerValorCampo = (campo: string): string => {
   const elementoCampo = document.querySelector(`#${campo}`);
   if (elementoCampo && elementoCampo instanceof HTMLInputElement) {
@@ -140,7 +124,7 @@ export const obtenerValorCampo = (campo: string): string => {
 export const handleClickFiltrar = async (evento: Event) => {
   evento.preventDefault();
   imputForm = obtenerValorCampo("nombre");
-  console.log(imputForm);
+
   const div = document.getElementById("listado-personajes");
   if (div && div instanceof HTMLDivElement) {
     while (div.firstChild) {
@@ -148,7 +132,7 @@ export const handleClickFiltrar = async (evento: Event) => {
     }
   }
 
-  pintarPersonajes2(imputForm);
+  pintarPersonajes(imputForm);
 };
 
 const botonFiltrar = document.getElementById("botonFiltrar");

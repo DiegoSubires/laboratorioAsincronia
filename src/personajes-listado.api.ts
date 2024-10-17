@@ -2,15 +2,24 @@ import axios from "axios";
 
 import { Personaje } from "./personajes-listado.model";
 
-export const obtenerPersonajes = async (): Promise<Personaje[]> => {
+export const obtenerPersonajes = async (str: string): Promise<Personaje[]> => {
+  const { data } = await axios.get(
+    `http://localhost:3000/personajes?nombre_like=${str}`
+  );
+
   try {
-    const { data } = await axios.get("http://localhost:3000/personajes");
-    return data;
+    if (!data) {
+      const { data } = await axios.get("http://localhost:3000/personajes");
+      return data;
+    } else {
+      return data;
+    }
   } catch (error) {
     throw new Error("Error al obtener los personajes");
   }
 };
 
+/*
 export const obtenerPersonajes2 = async (str: string): Promise<Personaje[]> => {
   try {
     const { data } = await axios.get(
