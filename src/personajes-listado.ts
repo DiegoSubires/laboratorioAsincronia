@@ -1,5 +1,11 @@
 import { CrearBotonParams, Personaje } from "./personajes-listado.model";
-import { obtenerPersonajes } from "./personajes-listado.api";
+import {
+  obtenerPersonajes,
+  obtenerPersonajes2,
+} from "./personajes-listado.api";
+
+export let imputForm: string = "morta";
+console.log(imputForm);
 
 export const crearElementoImagen = (
   portada: string,
@@ -11,11 +17,23 @@ export const crearElementoImagen = (
   return imagen;
 };
 
-export const crearElementoParrafo = (texto: string): HTMLParagraphElement => {
+export const crearElementoParrafo = (
+  label: string,
+  texto: string
+): HTMLDivElement => {
+  const div = document.createElement("div");
+
+  const etiqueta = document.createElement("p");
+  etiqueta.style.fontWeight = "bold";
+  etiqueta.textContent = label;
   const parrafo = document.createElement("p");
   parrafo.textContent = texto;
-  return parrafo;
+  div.appendChild(etiqueta);
+  div.appendChild(parrafo);
+  div.className = "parrafo";
+  return div;
 };
+
 //// NO REVISADO
 
 export const crearBoton = (
@@ -63,11 +81,18 @@ export const crearContenedorPersonaje = (
     personaje.nombre
   );
   elementoPersonaje.appendChild(imagen);
-  const nombre = crearElementoParrafo(personaje.nombre);
+
+  const nombre = crearElementoParrafo("Nombre: ", `${personaje.nombre}`);
   elementoPersonaje.appendChild(nombre);
-  const especialidad = crearElementoParrafo(personaje.especialidad);
+  const especialidad = crearElementoParrafo(
+    "Especialidad: ",
+    `${personaje.especialidad}`
+  );
   elementoPersonaje.appendChild(especialidad);
-  const habilidades = crearElementoParrafo(personaje.habilidades.join(", "));
+  const habilidades = crearElementoParrafo(
+    "Habilidades: ",
+    `${personaje.habilidades.join(", ")}`
+  );
   elementoPersonaje.appendChild(habilidades);
 
   return elementoPersonaje;
@@ -86,7 +111,49 @@ export const pintarPersonajes = async (): Promise<void> => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", pintarPersonajes);
+export const pintarPersonajes2 = async (str: string): Promise<void> => {
+  const personajes = await obtenerPersonajes2(str);
+  const listado = document.querySelector("#listado-personajes");
+  if (listado && listado instanceof HTMLDivElement) {
+    personajes.forEach((personaje) => {
+      const contenedorPersonaje = crearContenedorPersonaje(personaje);
+      listado.appendChild(contenedorPersonaje);
+    });
+  } else {
+    throw new Error("No se ha encontrado el contenedor del listado");
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  handleClickFiltrar;
+});
+pintarPersonajes2("");
+export const obtenerValorCampo = (campo: string): string => {
+  const elementoCampo = document.querySelector(`#${campo}`);
+  if (elementoCampo && elementoCampo instanceof HTMLInputElement) {
+    return elementoCampo.value;
+  } else {
+    throw new Error(`No se ha encontrado el campo ${campo}`);
+  }
+};
+
+export const handleClickFiltrar = async (evento: Event) => {
+  evento.preventDefault();
+  imputForm = obtenerValorCampo("nombre");
+  console.log(imputForm);
+  const div = document.getElementById("listado-personajes");
+  if (div && div instanceof HTMLDivElement) {
+    while (div.firstChild) {
+      div.removeChild(div.firstChild);
+    }
+  }
+
+  pintarPersonajes2(imputForm);
+};
+
+const botonFiltrar = document.getElementById("botonFiltrar");
+if (botonFiltrar && botonFiltrar instanceof HTMLButtonElement)
+  botonFiltrar.addEventListener("click", handleClickFiltrar);
 
 /* export const editaPelicula = async (id: string) => {
   window.location.href = `../pelicula-editar/index.html?
@@ -105,5 +172,22 @@ export const borraPelicula = async (id: string) => {
     alert("Pelicula borrada con exito");
   } catch (error) {
     alert(error);
+  }
+};*/
+/*
+const actualizaImput = async (evento: Event): Promise<string> => {
+  evento.preventDefault();
+  imputForm = obtenerValorCampo("nombre");
+  console.log(imputForm);
+  return imputForm;
+};
+
+const iniciarFormulario = () => {
+  const formulario = document.querySelector("#formulario");
+
+  if (formulario && formulario instanceof HTMLFormElement) {
+    formulario.addEventListener("submit", actualizaImput);
+  } else {
+    throw new Error("No se ha encontrado el formulario");
   }
 };*/

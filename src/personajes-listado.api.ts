@@ -1,19 +1,29 @@
-/*import axios from "axios";
+import axios from "axios";
 
 import { Personaje } from "./personajes-listado.model";
+
 export const obtenerPersonajes = async (): Promise<Personaje[]> => {
   try {
     const { data } = await axios.get("http://localhost:3000/personajes");
-    console.log(data);
     return data;
   } catch (error) {
     throw new Error("Error al obtener los personajes");
   }
 };
 
-obtenerPersonajes();*/
+export const obtenerPersonajes2 = async (str: string): Promise<Personaje[]> => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:3000/personajes?nombre_like=${str}`
+    );
+    return data;
+  } catch (error) {
+    throw new Error("Error al obtener los personajes");
+  }
+};
+// obtenerPersonajes2;
 
-export const obtenerPersonajes = async () => {
+/*export const obtenerPersonajes = async () => {
   try {
     const respuesta = await fetch("http://localhost:3000/personajes");
     if (!respuesta.ok) {
@@ -26,4 +36,4 @@ export const obtenerPersonajes = async () => {
   }
 };
 
-obtenerPersonajes();
+obtenerPersonajes();*/

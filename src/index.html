@@ -11,18 +11,16 @@
   </head>
   <body>
     <div class="root">
-      <h1 class="cabecera-h1">Personajes de Mortadelo y Filemón</h1>
-      <div>
+      <main class="main">
+        <h1 class="cabecera-h1">Personajes de Mortadelo y Filemón</h1>
         <div class="card">
           <form class="contenedor-formulario" id="formulario">
             <div class="grupo-formulario">
-              <input id="title" type="text" name="title" required />
-              <button class="boton">FILTRAR</button>
+              <input id="nombre" type="text" name="nombre" required />
+              <button id="botonFiltrar" type="submit">FILTRAR</button>
             </div>
           </form>
         </div>
-      </div>
-      <main class="main">
         <div id="listado-personajes" class="listado-personajes"></div>
       </main>
     </div>
